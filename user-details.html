@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>User-Details</title>
+  <style>
+    .title{
+      display: flex;
+      justify-content:center;
+      font-size: 30px;
+    }
+    .title > h1{
+      margin: 5px;
+    }
+    p{
+      margin: 2px;
+    }
+  </style>
+</head>
+<body>
+<div class="title">
+  <h1>User Info</h1>
+</div>
+<script>
+  const param = new URL(window.location.href);
+  let user_id = param.searchParams.get("id");
+  let blockUser = document.createElement('div');
+  let postsBlock = document.createElement('div');
+  fetch(`https://jsonplaceholder.typicode.com/users/${user_id}`)
+          .then(res => res.json())
+          .then((user) => {
+            console.log(user);
+            let user_name = document.createElement('p');
+            user_name.innerText = "Name: " + user.name;
+            user_name.setAttribute('style','background: #b1d2e1');
+            let user_id = document.createElement('p');
+            user_id.innerText = "Id: " + user.id;
+            user_id.setAttribute('style','background: #b1d2e1');
+            let user_username = document.createElement('p');
+            user_username.innerText = "Username: " + user.username;
+            user_username.setAttribute('style','background: #b1d2e1');
+            let user_email = document.createElement('p');
+            user_email.innerText = "Email: " + user.email;
+            user_email.setAttribute('style','background: #b1d2e1');
+            let user_phone = document.createElement('p');
+            user_phone.innerText = "Phone: " + user.phone;
+            user_phone.setAttribute('style','background: #b1d2e1');
+            let user_website = document.createElement('p');
+            user_website.innerText = "Website: " + user.website;
+            user_website.setAttribute('style','background: #b1d2e1');
+            blockUser.append(user_name, user_id, user_username, user_email, user_phone, user_website);
+
+
+            let address = user.address;
+            let addressBlock = document.createElement('div');
+            addressBlock.setAttribute('style','background: #b1d2e1');
+            console.log(address);
+            let userAddressList = document.createElement('p');
+            userAddressList.innerText = "Address: ";
+            addressBlock.appendChild(userAddressList);
+            blockUser.appendChild(addressBlock);
+            let listAddress = document.createElement('ul');
+            let address_city = document.createElement('li');
+            address_city.innerText = "City: " + address.city;
+            listAddress.appendChild(address_city);
+            let address_street = document.createElement('li');
+            address_street.innerText = "Street: " + address.street;
+            listAddress.appendChild(address_street);
+            let address_suite = document.createElement('li');
+            address_suite.innerText = "Suite: " + address.suite;
+            listAddress.appendChild(address_suite);
+            let address_zipcode = document.createElement('li');
+            address_zipcode.innerText = "Zipcode: " + address.zipcode;
+            listAddress.appendChild(address_zipcode);
+            let address_geo_list = document.createElement('ul');
+            let geo_list = document.createElement('p');
+            geo_list.innerText = "Geo: ";
+            address_geo_list.appendChild(geo_list);
+            let address_geo_Latitude = document.createElement('li');
+            address_geo_Latitude.innerText = "Latitude: " + address.geo.lat;
+            address_geo_list.appendChild(address_geo_Latitude);
+            let address_geo_longitude = document.createElement('li');
+            address_geo_longitude.innerText = "Longitude: " + address.geo.lng;
+            address_geo_list.appendChild(address_geo_longitude);
+            listAddress.appendChild(address_geo_list);
+            addressBlock.appendChild(listAddress);
+            blockUser.appendChild(addressBlock);
+
+
+            let company = user.company;
+            let companyBlock = document.createElement('div');
+            companyBlock.setAttribute('style','background: #b1d2e1');
+            console.log(company);
+            let userCompanyList = document.createElement('p');
+            userCompanyList.innerText = "Company: ";
+            companyBlock.appendChild(userCompanyList);
+            blockUser.appendChild(companyBlock);
+            let listCompany = document.createElement('ul');
+            let company_name = document.createElement('li');
+            company_name.innerText = "Name: " + company.name;
+            listCompany.appendChild(company_name);
+            let company_catchPhrase = document.createElement('li');
+            company_catchPhrase.innerText = "Catch Phrase: " + company.catchPhrase;
+            listCompany.appendChild(company_catchPhrase);
+            let company_business_services = document.createElement('li');
+            company_business_services.innerText = "Catch Phrase: " + company.bs;
+            listCompany.appendChild(company_business_services);
+            companyBlock.appendChild(listCompany);
+            blockUser.appendChild(companyBlock);
+
+            let buttonBlock = document.createElement('div');
+            buttonBlock.setAttribute('style','display:flex; justify-content: center')
+            let postButton = document.createElement('button');
+            postButton.setAttribute('style','width: 90%');
+            postButton.setAttribute('onclick',"getUserPost()");
+            postButton.innerText = "Post of current user";
+            buttonBlock.appendChild(postButton);
+            blockUser.appendChild(buttonBlock);
+            document.body.appendChild(blockUser);
+          })
+  function getUserPost() {
+    fetch(`https://jsonplaceholder.typicode.com/users/${user_id}/posts`)
+            .then(res => res.json())
+            .then((posts) => {
+              console.log(posts);
+                postsBlock.setAttribute('style','display:flex; justify-content: center; flex-wrap: wrap; margin: 1vw');
+                if (postsBlock.innerText === ""){
+                for (const post of posts) {
+                  let postBlock = document.createElement('div');
+                  postBlock.setAttribute('style','border: 1px solid #d0ebce; width: 17vw; height: 8vh');
+                  let postInfo = document.createElement('p');
+                  postInfo.innerText = `Title: ${post.title}
+                  `;
+                  postInfo.setAttribute('style','background: #d0ebce; margin-top: 10px');
+                  let link = document.createElement('a');
+                  link.innerText = "Post_Page";
+                  link.setAttribute('href', `post-details.html?id=${post.id}`);
+                  postInfo.appendChild(link);
+                  postBlock.appendChild(postInfo);
+                  postsBlock.appendChild(postBlock);
+                }
+                blockUser.appendChild(postsBlock);
+                }
+            })
+  }
+</script>
+</body>
+</html>
